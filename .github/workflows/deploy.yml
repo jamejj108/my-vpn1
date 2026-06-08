@@ -1,0 +1,41 @@
+name: Deploy VPN
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Reality VPN
+        run: |
+          docker run -d --name xray-reality -p 443:443 -p 443:443/udp teddysun/xray:latest
+          
+          IP=$(curl -s ifconfig.me)
+          UUID="84df6f9e-64bf-4f16-bd8c-02cf4603e8a4"
+          PUBLIC_KEY="hX9zR_vW7bK6nF4mN2pQ8sT3vW5xZy1u2v3w4x5y6z8"
+          SHORT_ID="0123456789abcdef"
+          
+          echo "=================================================="
+          echo "VPN SERVER DETAILS (PORT 443 REALITY)"
+          echo "=================================================="
+          echo "IP: $IP"
+          echo "Port: 443"
+          echo "UUID: $UUID"
+          echo "Flow: xtls-rprx-vision"
+          echo "Network: tcp"
+          echo "TLS: reality"
+          echo "SNI: www.microsoft.com"
+          echo "Public Key: $PUBLIC_KEY"
+          echo "Short ID: $SHORT_ID"
+          echo "=================================================="
+          echo ""
+          echo "COPY THIS COPY/PASTE LINK 👇"
+          echo "vless://$UUID@$IP:443?security=reality&sni=www.microsoft.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp&flow=xtls-rprx-vision#GitHub-Reality"
+          echo "=================================================="
+          
+          for i in {1..360}; do
+            sleep 60
+            echo "Server is running... minute $i"
+          done
